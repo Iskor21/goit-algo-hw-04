@@ -8,7 +8,7 @@ def add_contact(args, contacts, filename="contacts.txt"):
     contacts[name] = phone
     with open(filename, "a", encoding="utf-8") as f:
         f.write(f"{name},{phone}\n")
-    return "Contact added."
+    return ["Contact added."]
 
 def change_contact(args, contacts, filename="contacts.txt"):
     name, phone = args
@@ -17,9 +17,9 @@ def change_contact(args, contacts, filename="contacts.txt"):
         with open(filename, "w", encoding="utf-8") as f:
             for n, p in contacts.items():
                 f.write(f"{n},{p}\n")
-        return "Contact changed."
+        return ["Contact changed."]
     else:
-        return "Contact does not exist."
+        return ["Contact does not exist."]
 
 def load_contacts(filename="contacts.txt"):
     contacts = {}
@@ -34,15 +34,16 @@ def load_contacts(filename="contacts.txt"):
 
 def phone_contact(args, contacts):
     if not args:
-        for n, p in contacts.items():
-            print(f"{n}: {p}")
-        return "All contacts shown."
+        return [f"{n}: {p}" for n, p in contacts.items()]
     else:
         name = args[0]
         if name in contacts:
-            return f"{name}: {contacts[name]}"
+            return [f"{name}: {contacts[name]}"]
         else:
-            return f"Contact {name} does not exist."
+            return [f"Contact {name} does not exist."]
+
+def all_contacts(contacts):
+    return [f"{n}: {p}" for n, p in contacts.items()]
 
 def main():
     contacts = load_contacts()
@@ -57,15 +58,17 @@ def main():
         elif command == "hello":
             print("How can I help you?")
         elif command == "add":
-            print(add_contact(args, contacts))
+            for r in add_contact(args, contacts):
+                print(r)
         elif command == "change":
-            print(change_contact(args, contacts))
+            for r in change_contact(args, contacts):
+                print(r)
         elif command == "phone":
-            print(phone_contact(args, contacts))
+            for r in phone_contact(args, contacts):
+                print(r)
         elif command == "all":
-            print(contacts)
-        elif command == "exit":
-            print("Good bye!")
+            for r in all_contacts(contacts):
+                print(r)
         else:
             print("Invalid command.")
 
